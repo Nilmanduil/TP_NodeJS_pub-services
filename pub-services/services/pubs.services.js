@@ -1,4 +1,5 @@
 var data = require('../mocks/pubs');
+var moment = require('moment');
 
 function getPubs() {
     return data.map(function (pub) {
@@ -7,13 +8,17 @@ function getPubs() {
 }
 
 function getOpenPubs(day) {
-    var filtered = data.filter(function (pub) {
-        return pub.openDays.includes(day);
-    })
+    if(!day) {
+        day = moment().format("dddd");
+    }
 
-    return filtered.map(function (pub) {
-        return pub.name;
-    });
+    return data
+        .filter(function (pub) {
+            return pub.openDays.includes(day);
+        })
+        .map(function (pub) {
+            return pub.name;
+        });
 }
 
 module.exports = {
