@@ -1,27 +1,31 @@
-var data = require('../mocks/pubs');
-var moment = require('moment');
+const Pub = require('../classes/Pub');
+
+const data = require('../mocks/pubs');
+const moment = require('moment');
+const pubs = [];
 
 function getPubs() {
-    return data.map(function (pub) {
-        return pub.name;
+    data.forEach(function (pub) {
+        pubs.push(new Pub(pub.name, pub.owner, pub.openDays, pub.openHours, pub.beers));
     })
+    return pubs;
 }
 
-function getOpenPubs(day) {
+function getOpenPubs(day, hour) {
     if(!day) {
         day = moment().format("dddd");
     }
+    if (!hour) {
+        hour = moment.format("H");
+    }
 
-    return data
+    return getPubs()
         .filter(function (pub) {
-            return pub.openDays.includes(day);
-        })
-        .map(function (pub) {
-            return pub.name;
+            return pub.isOpen(day, hour);
         });
 }
 
 module.exports = {
-    getPubs: getPubs,
-    getOpenPubs: getOpenPubs
+    getPubs,
+    getOpenPubs
 }
